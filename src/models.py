@@ -12,8 +12,8 @@ Base = declarative_base()
 Followers = Table(
     'followers',
     Base.metadata,
-    Column('user_from_id', Integer, ForeignKey('user.ID'), primary_key=True),
-    Column('user_to_id', Integer, ForeignKey('user.ID'), primary_key=True)
+    Column('follower_id', Integer, ForeignKey('user.ID'), primary_key=True),
+    Column('following_id', Integer, ForeignKey('user.ID'), primary_key=True)
 )
 
 class User(Base):
@@ -25,17 +25,14 @@ class User(Base):
     email = Column(String(250),nullable=False)
     post= relationship('Post', backref='user', lazy=True)
     comment= relationship('Comment', backref='user', lazy=True)
-    following = relationship(
-        'Followers',
+    followed = relationship(
+        'User',
         secondary=Followers,
-        primaryjoin=ID == Followers.c.user_from_id,
-        secondaryjoin=ID == Followers.c.user_to_id,
-        backref='user',
-        lazy='subquery'
+        primaryjoin=(Followers.c.following_id==id), # Trae los seguidos
+        secondaryjoin=(Followers.c.follower_id==id), # Trae los que yo sigo
+        backref='following',
+        lazy='True'
     )
-
-
-
 
 class Media(Base):
     __tablename__= 'media'
