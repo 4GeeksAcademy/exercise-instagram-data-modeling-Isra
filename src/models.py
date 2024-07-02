@@ -8,7 +8,6 @@ from eralchemy2 import render_er
 Base = declarative_base()
 
 
-
 Followers = Table(
     'followers',
     Base.metadata,
@@ -48,14 +47,12 @@ class Post(Base):
     comment= relationship('Comment',backref='post', lazy=True)
     media= relationship('Media',backref='post', lazy=True)
 
-  
 class Comment(Base):
     __tablename__='comment'
     ID= Column(Integer, primary_key=True)
     comment_text = Column(String(250),nullable=False)
     author_id = Column(Integer, ForeignKey('user.ID'))
     post_id = Column(Integer, ForeignKey('post.ID'))
-
 
 
 ## Draw from SQLAlchemy base
@@ -65,3 +62,4 @@ try:
 except Exception as e:
     print("There was a problem genering the diagram")
     raise e
+
